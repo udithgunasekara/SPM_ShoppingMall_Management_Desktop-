@@ -17,15 +17,33 @@ class _HomeState extends State<Home> {
   int _selectedIndex = 0;
   Stream<QuerySnapshot>? lockerStream;
   Stream<QuerySnapshot>? equippedLockerStream;
+  Stream<QuerySnapshot>? transferlocker;
 
   // Image URL
   Future<String>? imageUrlFuture;
 
+  String? tranferLockId;
+
   getOnTheLoad() async {
     lockerStream = await DatabaseMethods().getLockerDetails();
     equippedLockerStream = await DatabaseMethods().getEquippedLocker("C001");
+    transferlocker = DatabaseMethods().getTransferLocker("C001");
     imageUrlFuture = DatabaseMethods().getImageUrl('QR/user.png'); // Example image path in Firebase Storage
+
+    transferlocker?.listen((snapshot) {
+      if (snapshot.docs.isNotEmpty) {
+        tranferLockId = snapshot.docs.first.get('lockid');
+      } else {
+        tranferLockId = null; // Handle if no documents are available
+      }
+      setState(() {}); // Update UI after fetching lock ID
+    });
+
     setState(() {});
+  }
+
+  String? getFirstLockId() {
+    return tranferLockId;
   }
 
   @override
@@ -35,8 +53,8 @@ class _HomeState extends State<Home> {
   }
 
   //Display All locker and its details
-  Widget allLockerDetails() {
-    return allLockerDetail(lockerStream);
+  Widget allLockerDetails(String tranferLockId) {
+    return allLockerDetail(lockerStream, tranferLockId);
   }
 
   //Display Equipped locker and its details
@@ -45,12 +63,26 @@ class _HomeState extends State<Home> {
   }
 
   switchPanel(int value) {
-    if (value == 1) {
-      return allLockerDetails();
+  if (value == 1) {
+    if (tranferLockId != null) {
+      return allLockerDetails(tranferLockId!);
     } else {
-      return equippedLockerDetails();
+      return Center(
+        child: Text(
+          "Scan QR to unlock a locker",
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 20.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      );
     }
+  } else {
+    return equippedLockerDetails();
   }
+}
+
 
   void _onItemTapped(int index) {
     setState(() {

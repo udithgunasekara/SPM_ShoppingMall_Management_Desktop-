@@ -42,19 +42,12 @@ class DatabaseMethods {
         .snapshots();
   }
 
-  Stream<QuerySnapshot> getLocksOfLockersStream(String lockerId) {
-    return FirebaseFirestore.instance
-        .collection("Locks")
-        .where("lockerid", isEqualTo: lockerId)
-        .snapshots();
-  }
-
   String _generatePin() {
     final _random = Random();
     return List.generate(6, (index) => _random.nextInt(10)).join();
   }
 
-  Future<void> updateLockDetails(String lockid, String userId) async {
+  Future<void> updateLockDetails(String lockid, String userId, String tranferLockId) async {
     String pin = _generatePin();
 
     try {
@@ -75,6 +68,7 @@ class DatabaseMethods {
           'userid': userId,
           'isempty': false,
           'password': pin,
+          'picklockid': tranferLockId
         });
       }
 
@@ -87,8 +81,7 @@ class DatabaseMethods {
   Future<void> createNotification(String userId, String lockId) async {
     try {
       // Create a new document in the "Notification" collection
-      await FirebaseFirestore.instance.collection("Notification").doc().set({
-        'message': 'your items stored',
+      await FirebaseFirestore.instance.collection("TransferLocker").doc().set({
         'isread': false,
         'userid': userId,
         'lockid': lockId,
@@ -98,5 +91,39 @@ class DatabaseMethods {
     } catch (e) {
       print("Error creating notification: $e");
     }
+  }
+
+  Future<void> updateTransferLocker(String lockId) async {
+  try {
+    // Query the collection to find documents where lockid matches the given value
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection("TransferLocker")
+        .where("lockid", isEqualTo: lockId)
+        .where("isread", isEqualTo: false)
+        .get();
+
+    // Check if any documents were found
+    if (snapshot.docs.isNotEmpty) {
+      // Update the first matching document (assuming lockid is unique)
+      await snapshot.docs.first.reference.update({
+        "isread": true, // Example field to update, you can add more fields here
+      });
+      print("Transfer locker updated successfully.");
+    } else {
+      print("No transfer locker found with the provided lockId.$lockId");
+    }
+  } catch (e) {
+    print("Error updating transfer locker: $e");
+  }
+}
+
+
+
+  Stream<QuerySnapshot> getTransferLocker(String userId) {
+    return FirebaseFirestore.instance
+        .collection("TransferLocker")
+        .where("userid", isEqualTo: userId)
+        .where("isread", isEqualTo: false)
+        .snapshots();
   }
 }
