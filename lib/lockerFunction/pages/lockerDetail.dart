@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:spm_shoppingmall_mobile/lockerFunction/service/database.dart';
 
-Widget allLockerDetail(Stream<QuerySnapshot>? lockerStream, String tranferLockId) {
+Widget allLockerDetail(Stream<QuerySnapshot>? lockerStream, String tranferLockId, String userID) {
     return StreamBuilder<QuerySnapshot>(
       stream: lockerStream,
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -24,7 +24,7 @@ Widget allLockerDetail(Stream<QuerySnapshot>? lockerStream, String tranferLockId
 
             return InkWell(
               onTap: () {
-                showLocksOfLockerPopup(context, lockerId, tranferLockId);
+                showLocksOfLockerPopup(context, lockerId, tranferLockId, userID);
               },
               child: Container(
                 margin: EdgeInsets.only(bottom: 20.0),
@@ -110,7 +110,7 @@ Widget allLockerDetail(Stream<QuerySnapshot>? lockerStream, String tranferLockId
     );
   }
 
-void showLocksOfLockerPopup(BuildContext context, String lockerId, String tranferLockId) {
+void showLocksOfLockerPopup(BuildContext context, String lockerId, String tranferLockId, String userID) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -140,7 +140,7 @@ void showLocksOfLockerPopup(BuildContext context, String lockerId, String tranfe
                       subtitle: Text("Status: ${lockData['isempty']}"),
                       trailing: ElevatedButton(
                         onPressed: () {
-                          _showConfirmationDialog(context, lockData['lockid'], tranferLockId);
+                          _showConfirmationDialog(context, lockData['lockid'], tranferLockId, userID);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green,
@@ -171,7 +171,7 @@ void showLocksOfLockerPopup(BuildContext context, String lockerId, String tranfe
     );
   }
 
-void _showConfirmationDialog(BuildContext context, String lockId, String tranferLockId) {
+void _showConfirmationDialog(BuildContext context, String lockId, String tranferLockId, String userID) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -190,7 +190,7 @@ void _showConfirmationDialog(BuildContext context, String lockId, String tranfer
               child: Text("Confirm"),
               onPressed: () {
                 print("Updating lock ID: $lockId");
-                DatabaseMethods().updateLockDetails(lockId, "C001", tranferLockId);
+                DatabaseMethods().updateLockDetails(lockId, userID, tranferLockId);
                 DatabaseMethods().updateTransferLocker(tranferLockId);
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();

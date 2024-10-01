@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:spm_shoppingmall_mobile/lockerFunction/pages/home.dart';
 import 'package:spm_shoppingmall_mobile/lockerFunction/service/database.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ScanLock extends StatefulWidget {
   const ScanLock({super.key});
@@ -12,7 +13,23 @@ class ScanLock extends StatefulWidget {
 
 class _ScanLockState extends State<ScanLock> {
   String scanResult = '';
+  String userID = '';
   final MobileScannerController cameraController = MobileScannerController();
+
+  Future<void> getUserId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userId = prefs.getString('userID');  // Retrieve the userID
+
+    setState(() {
+      userID = '$userId';  // Update the userID in the state
+    });
+  }
+
+  @override
+  void initState() {
+    getUserId();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +93,7 @@ class _ScanLockState extends State<ScanLock> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                reserveLock(barcode);
+                reserveLock(barcode, userID);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -100,7 +117,7 @@ class _ScanLockState extends State<ScanLock> {
   }
 }
 
-void reserveLock(String barcode){
+void reserveLock(String barcode, String userID){
   DatabaseMethods().getEmptyLocksStream("P101").first.then((snapshot) {
     if (snapshot.docs.isNotEmpty) {
       // Retrieve the first lock's lockId
@@ -108,7 +125,7 @@ void reserveLock(String barcode){
 
       // Now update the lock details with the lockId and barcode
       DatabaseMethods().updateLockDetails(lockId, barcode, '');
-      DatabaseMethods().createNotification('C001', lockId);
+      DatabaseMethods().createNotification(userID, lockId);
     } else {
       // Handle case when no empty locks are available
       print("No empty locks available for lockerId");

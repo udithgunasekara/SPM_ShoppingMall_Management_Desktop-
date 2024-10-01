@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:spm_shoppingmall_mobile/lockerFunction/pages/home.dart';
@@ -7,6 +8,8 @@ Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(const MyApp());
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setString('userID', 'C001');
 }
 
 class MyApp extends StatelessWidget {

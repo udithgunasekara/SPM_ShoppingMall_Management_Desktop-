@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spm_shoppingmall_mobile/lockerFunction/service/database.dart';
 import 'package:spm_shoppingmall_mobile/lockerFunction/pages/lockerDetail.dart';
 import 'package:spm_shoppingmall_mobile/lockerFunction/pages/Locks.dart';
@@ -13,11 +14,21 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  String userID = '';
   int value = 1;
   int _selectedIndex = 0;
   Stream<QuerySnapshot>? lockerStream;
   Stream<QuerySnapshot>? equippedLockerStream;
   Stream<QuerySnapshot>? transferlocker;
+
+  Future<void> getUserId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userId = prefs.getString('userID');  // Retrieve the userID
+
+    setState(() {
+      userID = '$userId';  // Update the userID in the state
+    });
+  }
 
   // Image URL
   Future<String>? imageUrlFuture;
@@ -26,8 +37,8 @@ class _HomeState extends State<Home> {
 
   getOnTheLoad() async {
     lockerStream = await DatabaseMethods().getLockerDetails();
-    equippedLockerStream = await DatabaseMethods().getEquippedLocker("C001");
-    transferlocker = DatabaseMethods().getTransferLocker("C001");
+    equippedLockerStream = await DatabaseMethods().getEquippedLocker(userID);
+    transferlocker = DatabaseMethods().getTransferLocker(userID);
     imageUrlFuture = DatabaseMethods().getImageUrl('QR/user.png'); // Example image path in Firebase Storage
 
     transferlocker?.listen((snapshot) {
@@ -48,18 +59,19 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
+    getUserId();
     getOnTheLoad();
     super.initState();
   }
 
   //Display All locker and its details
   Widget allLockerDetails(String tranferLockId) {
-    return allLockerDetail(lockerStream, tranferLockId);
+    return allLockerDetail(lockerStream, tranferLockId, userID);
   }
 
   //Display Equipped locker and its details
   Widget equippedLockerDetails() {
-    return equippedLocks(lockerStream);
+    return equippedLocks(lockerStream, userID);
   }
 
   switchPanel(int value) {
