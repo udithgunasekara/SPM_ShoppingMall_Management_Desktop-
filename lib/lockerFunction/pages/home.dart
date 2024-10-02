@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spm_shoppingmall_mobile/lockerFunction/service/database.dart';
 import 'package:spm_shoppingmall_mobile/lockerFunction/pages/lockerDetail.dart';
 import 'package:spm_shoppingmall_mobile/lockerFunction/pages/Locks.dart';
@@ -14,21 +13,11 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  String userID = '';
   int value = 1;
   int _selectedIndex = 0;
   Stream<QuerySnapshot>? lockerStream;
   Stream<QuerySnapshot>? equippedLockerStream;
   Stream<QuerySnapshot>? transferlocker;
-
-  Future<void> getUserId() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? userId = prefs.getString('userID');  // Retrieve the userID
-
-    setState(() {
-      userID = '$userId';  // Update the userID in the state
-    });
-  }
 
   // Image URL
   Future<String>? imageUrlFuture;
@@ -37,8 +26,8 @@ class _HomeState extends State<Home> {
 
   getOnTheLoad() async {
     lockerStream = await DatabaseMethods().getLockerDetails();
-    equippedLockerStream = await DatabaseMethods().getEquippedLocker(userID);
-    transferlocker = DatabaseMethods().getTransferLocker(userID);
+    equippedLockerStream = await DatabaseMethods().getEquippedLocker("C001");
+    transferlocker = DatabaseMethods().getTransferLocker("C001");
     imageUrlFuture = DatabaseMethods().getImageUrl('QR/user.png'); // Example image path in Firebase Storage
 
     transferlocker?.listen((snapshot) {
@@ -59,41 +48,66 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
-    getUserId();
     getOnTheLoad();
     super.initState();
   }
 
   //Display All locker and its details
   Widget allLockerDetails(String tranferLockId) {
-    return allLockerDetail(lockerStream, tranferLockId, userID);
+    return allLockerDetail(lockerStream, tranferLockId);
   }
 
   //Display Equipped locker and its details
   Widget equippedLockerDetails() {
-    return equippedLocks(lockerStream, userID);
+    return equippedLocks(lockerStream);
   }
 
   switchPanel(int value) {
-  if (value == 1) {
-    if (tranferLockId != null) {
-      return allLockerDetails(tranferLockId!);
+    if (value == 1) {
+      if (tranferLockId != null) {
+        return allLockerDetails(tranferLockId!);
+      } else {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "Scan QR to unlock a locker",
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 20.0), // Space between text and image
+            FutureBuilder<String>(
+              future: imageUrlFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  // Display error message and log error
+                  print('Error loading image: ${snapshot.error}');
+                  return Center(child: Text('Error loading image'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return Center(child: Text('No image available'));
+                } else {
+                  return Center(
+                    child: Image.network(
+                      snapshot.data!,
+                      height: 250, // Adjust height according to your needs
+                      fit: BoxFit.cover,
+                    ),
+                  );
+                }
+              },
+            ),
+          ],
+        );
+      }
     } else {
-      return Center(
-        child: Text(
-          "Scan QR to unlock a locker",
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 20.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      );
+      return equippedLockerDetails();
     }
-  } else {
-    return equippedLockerDetails();
   }
-}
 
 
   void _onItemTapped(int index) {
@@ -118,44 +132,29 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         backgroundColor: Colors.blueAccent,
         title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              "Scan QR to unlock a locker ",
+              "Hello, ",
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 20.0,
                 fontWeight: FontWeight.bold,
               ),
             ),
+            
           ],
         ),
       ),
       body: Column(
         children: [
-          // Display the image below the "Pick a Locker" text
-          FutureBuilder<String>(
-            future: imageUrlFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                // Display error message and log error
-                print('Error loading image: ${snapshot.error}');
-                return Center(child: Text('Error loading image'));
-              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return Center(child: Text('No image available'));
-              } else {
-                return Center(
-                  child: Image.network(
-                    snapshot.data!,
-                    height: 250, // Adjust height according to your needs
-                    fit: BoxFit.cover,
-                  ),
-                );
-              }
-            },
-          ),
+          Text(
+              "Wellcome to locker picker",
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           SizedBox(height: 10.0), // Space between buttons and image
 
           // Display equipped locks block

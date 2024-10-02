@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:spm_shoppingmall_mobile/lockerFunction/service/database.dart';
 
-Widget equippedLocks(Stream<QuerySnapshot>? equippedLockersStream, String userID) {
+Widget equippedLocks(Stream<QuerySnapshot>? equippedLockersStream) {
   return StreamBuilder<QuerySnapshot>(
     stream: equippedLockersStream,
     builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -22,7 +22,7 @@ Widget equippedLocks(Stream<QuerySnapshot>? equippedLockersStream, String userID
       return FutureBuilder<void>(
         future: Future.wait(snapshot.data!.docs.map((ds) async {
           // Fetch locks for the current locker
-          QuerySnapshot lockSnapshot = await DatabaseMethods().getEquippedLockers(userID, ds["lockerid"]).first;
+          QuerySnapshot lockSnapshot = await DatabaseMethods().getEquippedLockers("C001", ds["lockerid"]).first;
           
           if (lockSnapshot.docs.isNotEmpty) {
             // If there are locks, add the locker to the list
@@ -112,7 +112,7 @@ Widget equippedLocks(Stream<QuerySnapshot>? equippedLockersStream, String userID
                         ),
                         SizedBox(height: 10),
                         FutureBuilder<QuerySnapshot>(
-                          future: DatabaseMethods().getEquippedLockers(userID, ds["lockerid"]).first,
+                          future: DatabaseMethods().getEquippedLockers("C001", ds["lockerid"]).first,
                           builder: (context, AsyncSnapshot<QuerySnapshot> lockSnapshot) {
                             if (lockSnapshot.connectionState == ConnectionState.waiting) {
                               return Padding(
