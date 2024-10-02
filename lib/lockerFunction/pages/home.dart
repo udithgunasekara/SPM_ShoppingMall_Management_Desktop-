@@ -74,15 +74,7 @@ class _HomeState extends State<Home> {
         return Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              "Scan QR to unlock a locker",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 20.0), // Space between text and image
+            SizedBox(height: 10.0), // Space between text and image
             FutureBuilder<String>(
               future: imageUrlFuture,
               builder: (context, snapshot) {
@@ -105,6 +97,14 @@ class _HomeState extends State<Home> {
                 }
               },
             ),
+            Text(
+              "Scan Me",
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 24.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ],
         );
       }
@@ -113,6 +113,61 @@ class _HomeState extends State<Home> {
     }
   }
 
+ 
+
+  Widget changeSubHead() {
+    String message;
+
+    if (tranferLockId == null && value == 1) {
+      message = "Scan the below QR code to store your goods in locker";
+    } else if(tranferLockId != null && value == 1) {
+      message = "You have received $tranferLockId locker. Pick a pickup locker to transfer your goods";
+    } else{
+      message = "Warning:This screen shows equipped locks and their passwords. Do not share this information";
+    }
+
+    return Container(
+      width: 300.0, // Set a specific width less than the parent width
+      padding: EdgeInsets.symmetric(vertical: 16.0),
+      child: Column(
+        children: [
+          // Conditionally show the icon if tranferLockId is not null
+          if (tranferLockId != null && value == 1) ...[
+            CircleAvatar(
+              backgroundColor: Colors.green,
+              radius: 20.0, // Adjust the size of the circle
+              child: Icon(
+                Icons.check, // Check icon
+                color: Colors.white, // Icon color
+                size: 20.0, // Icon size
+              ),
+            ),
+            SizedBox(height: 8.0), // Add space between the icon and the text
+          ],
+          // Conditionally show the QR icon if tranferLockId is null
+          if (tranferLockId == null && value == 1) ...[ // Adjust the size of the circle
+              Icon(
+                Icons.qr_code_scanner_rounded, // QR code icon
+                color: Colors.white, // Icon color
+                size: 40.0, // Icon size
+              ),
+            SizedBox(height: 8.0), // Add space between the icon and the text
+          ],
+          Text(
+            message,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 18.0, // Font size
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1.0, // Added letter spacing for readability
+              height: 1.4, // Adjusted line height for better spacing between lines
+            ),
+            textAlign: TextAlign.center, // Center the text for better layout
+          ),
+        ],
+      ),
+    );
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -136,33 +191,26 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         backgroundColor: Colors.blueAccent,
         title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              "Hello, $userID",
+              "Welcome to Locker Picker",
               style: TextStyle(
                 color: Colors.black,
-                fontSize: 20.0,
+                fontSize: 20.0, // Font size
                 fontWeight: FontWeight.bold,
+                letterSpacing: 1.0,
               ),
             ),
-            
           ],
         ),
       ),
       body: Column(
         children: [
-          Text(
-              "Wellcome to locker picker",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          SizedBox(height: 10.0), // Space between buttons and image
-
-          // Display equipped locks block
-          SizedBox(height: 10.0), // Space between buttons
+          
+          SizedBox(height: 30.0),
+          changeSubHead(), // Space between buttons and image
+          SizedBox(height: 50.0), // Space between buttons
           // Row to display buttons horizontally
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -170,9 +218,7 @@ class _HomeState extends State<Home> {
               ElevatedButton(
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all<Color>(
-                    value == 1
-                        ? Colors.black // Change to black when pressed
-                        : Colors.white, // Default green color
+                    value == 1 ? Colors.black : Colors.white, // Change to black when pressed
                   ),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
@@ -197,12 +243,14 @@ class _HomeState extends State<Home> {
                       Icons.lock_open_outlined,
                       color: value == 1 ? Colors.white : Colors.black, // Icon color based on state
                     ),
+                    SizedBox(width: 4.0), // Added space between icon and text
                     Text(
-                      " Pick a Locker",
+                      "Pick a Locker",
                       style: TextStyle(
                         color: value == 1 ? Colors.white : Colors.black,
-                        fontSize: 14.0,
+                        fontSize: 16.0, // Increased font size
                         fontWeight: FontWeight.bold,
+                        letterSpacing: 1.0, // Added letter spacing
                       ),
                     ),
                   ],
@@ -212,9 +260,7 @@ class _HomeState extends State<Home> {
               ElevatedButton(
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all<Color>(
-                    value == 0
-                        ? Colors.black // Change to black when pressed
-                        : Colors.white, // Default green color
+                    value == 0 ? Colors.black : Colors.white, // Change to black when pressed
                   ),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
@@ -236,13 +282,15 @@ class _HomeState extends State<Home> {
                   mainAxisSize: MainAxisSize.min, // Ensure the column takes minimum space
                   children: [
                     Text(
-                      "your lockers ",
+                      "Your Lockers",
                       style: TextStyle(
                         color: value == 0 ? Colors.white : Colors.black,
-                        fontSize: 14.0,
+                        fontSize: 16.0, // Increased font size
                         fontWeight: FontWeight.bold,
+                        letterSpacing: 1.0, // Added letter spacing
                       ),
                     ),
+                    SizedBox(width: 4.0), // Added space between text and icon
                     Icon(
                       Icons.lock_outlined,
                       color: value == 0 ? Colors.white : Colors.black, // Icon color based on state
@@ -276,6 +324,7 @@ class _HomeState extends State<Home> {
           ),
         ],
       ),
+
       // Add Bottom Navigation Bar
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
