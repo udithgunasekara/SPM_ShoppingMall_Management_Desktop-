@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:spm_shoppingmall_mobile/lockerFunction/pages/home.dart';
+import 'package:spm_shoppingmall_mobile/productSearchFunction/pages/scannerPage.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,9 +36,7 @@ class MyApp extends StatelessWidget {
         ),
       ), */
       initialRoute: '/home',
-      routes: {
-        '/home': (context) => const Home()
-      },
+      routes: {'/home': (context) => const ScannerPage()},
     );
   }
 }
