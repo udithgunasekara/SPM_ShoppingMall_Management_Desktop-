@@ -10,6 +10,12 @@ class ScannerPage extends StatefulWidget {
 }
 
 class _ScannerPageState extends State<ScannerPage> {
+  @override
+  void initState() {
+    super.initState();
+    startBarcodeScan(); // Automatically start scanning when the page opens
+  }
+
   // Method to start the barcode scanning process
   Future<void> startBarcodeScan() async {
     try {
@@ -45,14 +51,8 @@ class _ScannerPageState extends State<ScannerPage> {
         backgroundColor: Colors.brown[400],
       ),
       body: Center(
-        child: ElevatedButton(
-          onPressed: startBarcodeScan, // Trigger the barcode scanner
-          child: const Text("Start Barcode Scan"),
-          style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            backgroundColor: Colors.black, // Button color
-          ),
-        ),
+        child:
+            const CircularProgressIndicator(), // Show a loading indicator while scanning
       ),
     );
   }

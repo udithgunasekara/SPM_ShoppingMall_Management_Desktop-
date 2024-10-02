@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
+import 'package:spm_shoppingmall_mobile/productSearchFunction/pages/scannerPage.dart';
 
 import 'package:spm_shoppingmall_mobile/productSearchFunction/pages/wishList.dart';
 
@@ -71,7 +72,11 @@ class _ProductPageState extends State<ProductPage> {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => ScannerPage(),
+            ),
+          ),
         ),
         title: const Center(
           child: Text(
