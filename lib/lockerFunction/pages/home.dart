@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spm_shoppingmall_mobile/lockerFunction/service/database.dart';
 import 'package:spm_shoppingmall_mobile/lockerFunction/pages/lockerDetail.dart';
 import 'package:spm_shoppingmall_mobile/lockerFunction/pages/Locks.dart';
@@ -18,16 +19,23 @@ class _HomeState extends State<Home> {
   Stream<QuerySnapshot>? lockerStream;
   Stream<QuerySnapshot>? equippedLockerStream;
   Stream<QuerySnapshot>? transferlocker;
-
-  // Image URL
   Future<String>? imageUrlFuture;
-
   String? tranferLockId;
+  String? userID;
 
-  getOnTheLoad() async {
+  Future<void> _loadUserID() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? loadedUserId = prefs.getString('userID');
+    setState(() {
+      userID = loadedUserId;
+    });
+    getOnTheLoad(); // Fetch data after loading user ID
+  }
+
+  Future<void> getOnTheLoad() async {
     lockerStream = await DatabaseMethods().getLockerDetails();
-    equippedLockerStream = await DatabaseMethods().getEquippedLocker("C001");
-    transferlocker = DatabaseMethods().getTransferLocker("C001");
+    equippedLockerStream = await DatabaseMethods().getEquippedLocker('$userID');
+    transferlocker = DatabaseMethods().getTransferLocker('$userID');
     imageUrlFuture = DatabaseMethods().getImageUrl('QR/user.png'); // Example image path in Firebase Storage
 
     transferlocker?.listen((snapshot) {
@@ -42,24 +50,20 @@ class _HomeState extends State<Home> {
     setState(() {});
   }
 
-  String? getFirstLockId() {
-    return tranferLockId;
-  }
-
   @override
   void initState() {
-    getOnTheLoad();
     super.initState();
+    _loadUserID();
   }
 
   //Display All locker and its details
   Widget allLockerDetails(String tranferLockId) {
-    return allLockerDetail(lockerStream, tranferLockId);
+    return allLockerDetail(lockerStream, tranferLockId, '$userID');
   }
 
   //Display Equipped locker and its details
   Widget equippedLockerDetails() {
-    return equippedLocks(lockerStream);
+    return equippedLocks(lockerStream, '$userID');
   }
 
   switchPanel(int value) {
@@ -134,7 +138,7 @@ class _HomeState extends State<Home> {
         title: Row(
           children: [
             Text(
-              "Hello, ",
+              "Hello, $userID",
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 20.0,
