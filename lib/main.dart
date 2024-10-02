@@ -2,6 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:spm_shoppingmall_mobile/auth/login_page.dart';
+import 'package:spm_shoppingmall_mobile/auth/signup_page.dart';
+import 'package:spm_shoppingmall_mobile/common/home_page.dart';
+import 'package:spm_shoppingmall_mobile/giftCardAndLoyaltyFunction/pages/bill_entry_page.dart';
+import 'package:spm_shoppingmall_mobile/giftCardAndLoyaltyFunction/pages/claimed_giftcard_page.dart';
+import 'package:spm_shoppingmall_mobile/giftCardAndLoyaltyFunction/pages/notification_page.dart';
 import 'package:spm_shoppingmall_mobile/lockerFunction/pages/home.dart';
 
 Future main() async {
@@ -19,24 +25,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      /* title: 'Flutter Firebase auth',
-      theme: ThemeData(
-        primarySwatch: Colors.teal,
-        hintColor: Colors.amber,
-        textTheme: const TextTheme(
-          displayLarge: TextStyle(
-              fontSize: 32, fontWeight: FontWeight.bold, color: Colors.black),
-          bodyLarge: TextStyle(fontSize: 16, color: Colors.grey),
-        ),
-        buttonTheme: const ButtonThemeData(
-          buttonColor: Colors.teal,
-          shape: RoundedRectangleBorder(),
-        ),
-      ), */
-      initialRoute: '/home',
+      debugShowCheckedModeBanner: false,      
+      initialRoute: '/login',
       routes: {
-        '/home': (context) => const Home()
+        '/lockerhome': (context) => const Home(),
+        '/login' : (context) => const LoginPage(),
+        '/signup' : (context) => const SignupPage(),
+        '/home' : (context) => HomePage(user: FirebaseAuth.instance.currentUser),
+        '/billentry' : (context) => const BillEntryPage(),
+        '/notifications': (context) => NotificationsPage(),
+        '/giftcards': (context) => const ClaimedGiftCardsPage(),
       },
     );
   }
