@@ -127,7 +127,8 @@ class _HomeState extends State<Home> {
     }
 
     return Container(
-      width: 300.0, // Set a specific width less than the parent width
+      width: 300.0,
+      height: 180.0, // Set a specific width less than the parent width
       padding: EdgeInsets.symmetric(vertical: 16.0),
       child: Column(
         children: [
@@ -142,6 +143,14 @@ class _HomeState extends State<Home> {
                 size: 20.0, // Icon size
               ),
             ),
+            SizedBox(height: 8.0), // Add space between the icon and the text
+          ],
+          if (value == 0) ...[ // Adjust the size of the circle
+              Icon(
+                Icons.warning, // QR code icon
+                color: Colors.white, // Icon color
+                size: 40.0, // Icon size
+              ),
             SizedBox(height: 8.0), // Add space between the icon and the text
           ],
           // Conditionally show the QR icon if tranferLockId is null
