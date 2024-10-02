@@ -76,13 +76,8 @@ class _ScanLockState extends State<ScanLock> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                reserveLock(barcode);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const Home(), // Navigate to scanLock page
-                  ),
-                );
+                reserveLock(barcode); // Assuming you have this function defined
+                Navigator.pushNamed(context, '/home'); // Navigate to second screen
               },
               child: const Text('Yes'),
             ),
