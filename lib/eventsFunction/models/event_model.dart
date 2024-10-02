@@ -8,6 +8,7 @@ class Event {
   final String location;
   final String bannerImage;
   final String altText;
+  final String description; // Add description field
 
   Event({
     required this.id,
@@ -17,6 +18,7 @@ class Event {
     required this.location,
     required this.bannerImage,
     required this.altText,
+    required this.description, // Required for the constructor
   });
 
   factory Event.fromFirestore(DocumentSnapshot doc) {
@@ -29,6 +31,8 @@ class Event {
       location: data['location'] ?? '',
       bannerImage: data['bannerImage'] ?? '',
       altText: data['altText'] ?? '',
+      description:
+          data['description'] ?? '', // Retrieve description from Firestore
     );
   }
 }

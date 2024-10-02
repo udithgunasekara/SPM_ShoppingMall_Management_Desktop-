@@ -4,10 +4,17 @@ import '../models/event_model.dart';
 import '../widgets/event_card.dart';
 
 class EventsScreen extends StatelessWidget {
+  const EventsScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Events')),
+      appBar: AppBar(
+        title: const Text('Events'),
+        elevation: 0,
+        backgroundColor: Color(0xffffffff),
+        foregroundColor: Color(0xff000000),
+      ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('events').snapshots(),
         builder: (context, snapshot) {
@@ -16,22 +23,26 @@ class EventsScreen extends StatelessWidget {
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
 
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return Center(child: Text('No events found'));
+            return const Center(child: Text('No events found'));
           }
 
           List<Event> events = snapshot.data!.docs
               .map((doc) => Event.fromFirestore(doc))
               .toList();
 
-          return ListView.builder(
-            itemCount: events.length,
-            itemBuilder: (context, index) {
-              return EventCard(event: events[index]);
+          return RefreshIndicator(
+            onRefresh: () async {
+              // Implement refresh logic if needed
             },
+            child: ListView.builder(
+              padding: const EdgeInsets.only(top: 16),
+              itemCount: events.length,
+              itemBuilder: (context, index) => EventCard(event: events[index]),
+            ),
           );
         },
       ),
