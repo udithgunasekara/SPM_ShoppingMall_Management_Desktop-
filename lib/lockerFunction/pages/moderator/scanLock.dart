@@ -101,7 +101,7 @@ void reserveLock(String barcode){
       String lockId = snapshot.docs.first.get('lockid');
 
       // Now update the lock details with the lockId and barcode
-      DatabaseMethods().updateLockDetails(lockId, barcode, '');
+      DatabaseMethods().updateLockDetails(lockId, barcode, null);
       DatabaseMethods().createNotification(barcode, lockId);
     } else {
       // Handle case when no empty locks are available

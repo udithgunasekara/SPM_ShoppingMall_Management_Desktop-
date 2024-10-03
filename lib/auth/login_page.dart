@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spm_shoppingmall_mobile/auth/firebase_auth_impl/firebase_auth_impl.dart';
 import 'package:spm_shoppingmall_mobile/common/home_page.dart';
 
@@ -38,11 +39,18 @@ class _LoginPageState extends State<LoginPage> {
       //get current user and pass it to the home page
       User? user = FirebaseAuth.instance.currentUser;
 
+      _setUserIDInPreferences(user!.uid);
+
       Navigator.pushReplacement(context,
           MaterialPageRoute(builder: (context) => HomePage(user: user)));
     } else {
       debugPrint('Login failed');
     }
+  }
+
+  Future<void> _setUserIDInPreferences(String userID) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('userID', userID);
   }
 
   @override
