@@ -53,14 +53,16 @@ Widget equippedLocks(Stream<QuerySnapshot>? equippedLockersStream, String userID
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(16.0),
-                          child: Text(
-                            "you have not equppied lock",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                          child: Center( // Wrap the Text with Center widget
+                child: Text(
+                  "you have not equipped lock",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
                         ),
                       ],
                     ),
@@ -73,8 +75,8 @@ Widget equippedLocks(Stream<QuerySnapshot>? equippedLockersStream, String userID
             itemCount: lockersWithLocks.length,
             itemBuilder: (context, index) {
               DocumentSnapshot ds = lockersWithLocks[index];
-
               return Container(
+                padding: const EdgeInsets.only(top: 20.0),
                 margin: EdgeInsets.only(bottom: 20.0),
                 child: Material(
                   elevation: 5.0,

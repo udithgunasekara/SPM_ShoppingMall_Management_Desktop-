@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:spm_shoppingmall_mobile/lockerFunction/pages/home.dart';
 import 'package:spm_shoppingmall_mobile/lockerFunction/service/database.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
@@ -102,7 +101,7 @@ void reserveLock(String barcode){
       String lockId = snapshot.docs.first.get('lockid');
 
       // Now update the lock details with the lockId and barcode
-      DatabaseMethods().updateLockDetails(lockId, barcode, '');
+      DatabaseMethods().updateLockDetails(lockId, barcode, null);
       DatabaseMethods().createNotification(barcode, lockId);
     } else {
       // Handle case when no empty locks are available
