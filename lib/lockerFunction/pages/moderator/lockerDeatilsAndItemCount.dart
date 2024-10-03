@@ -45,11 +45,11 @@ Widget lockerDetailAndItemCount(Stream<QuerySnapshot>? lockerStream) {
                 return InkWell(
                   onTap: () {
                     Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ItemsInLocker(lockerID: lockerId,),
-              ),
-            );
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ItemsInLocker(lockerID: lockerId,),
+                      ),
+                    );
                   },
                   child: Container(
                     margin: EdgeInsets.only(bottom: 20.0),

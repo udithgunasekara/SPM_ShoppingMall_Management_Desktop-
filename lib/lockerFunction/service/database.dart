@@ -97,6 +97,7 @@ class DatabaseMethods {
         'isread': false,
         'userid': userId,
         'lockid': lockId,
+        'fromlockid': null,
       });
       
       print("Notification created successfully.");
@@ -105,7 +106,7 @@ class DatabaseMethods {
     }
   }
 
-  Future<void> updateTransferLocker(String lockId) async {
+  Future<void> updateTransferLocker(String lockId, String fromlockId) async {
   try {
     // Query the collection to find documents where lockid matches the given value
     QuerySnapshot snapshot = await FirebaseFirestore.instance
@@ -118,7 +119,8 @@ class DatabaseMethods {
     if (snapshot.docs.isNotEmpty) {
       // Update the first matching document (assuming lockid is unique)
       await snapshot.docs.first.reference.update({
-        "isread": true, // Example field to update, you can add more fields here
+        "isread": true,
+        "fromlockid": fromlockId,
       });
       print("Transfer locker updated successfully.");
     } else {
