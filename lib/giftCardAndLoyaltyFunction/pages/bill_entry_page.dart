@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:spm_shoppingmall_mobile/common/home_page.dart';
+import 'package:spm_shoppingmall_mobile/giftCardAndLoyaltyFunction/pages/loyalty_giftcard_page.dart';
 import 'package:spm_shoppingmall_mobile/giftCardAndLoyaltyFunction/util/user_data_service.dart';
 
 class BillEntryPage extends StatefulWidget {
@@ -41,10 +42,7 @@ class _BillEntryPageState extends State<BillEntryPage> {
 
         //navigate back to home page
         Future.delayed(const Duration(seconds: 4), () {
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => HomePage(user: user)),
-              (Route<dynamic> route) => false);
+          Navigator.pushReplacementNamed(context, '/giftcardandloyalty');
         });
       }
     } else {

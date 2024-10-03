@@ -6,6 +6,7 @@ import 'package:spm_shoppingmall_mobile/auth/signup_page.dart';
 import 'package:spm_shoppingmall_mobile/common/home_page.dart';
 import 'package:spm_shoppingmall_mobile/giftCardAndLoyaltyFunction/pages/bill_entry_page.dart';
 import 'package:spm_shoppingmall_mobile/giftCardAndLoyaltyFunction/pages/claimed_giftcard_page.dart';
+import 'package:spm_shoppingmall_mobile/giftCardAndLoyaltyFunction/pages/loyalty_giftcard_page.dart';
 import 'package:spm_shoppingmall_mobile/giftCardAndLoyaltyFunction/pages/notification_page.dart';
 import 'package:spm_shoppingmall_mobile/lockerFunction/pages/moderator/itemsInLocker.dart';
 import 'package:spm_shoppingmall_mobile/lockerFunction/pages/moderator/lockmangment.dart';
@@ -37,6 +38,7 @@ class MyApp extends StatelessWidget {
         '/billentry' : (context) => const BillEntryPage(),
         '/notifications': (context) => NotificationsPage(),
         '/giftcards': (context) => const ClaimedGiftCardsPage(),
+        '/giftcardandloyalty': (context) => const GiftCardAndLoyaltyPage(),
       },
     );
   }
