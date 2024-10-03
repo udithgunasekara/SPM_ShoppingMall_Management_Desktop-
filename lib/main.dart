@@ -7,7 +7,6 @@ import 'package:spm_shoppingmall_mobile/common/home_page.dart';
 import 'package:spm_shoppingmall_mobile/giftCardAndLoyaltyFunction/pages/bill_entry_page.dart';
 import 'package:spm_shoppingmall_mobile/giftCardAndLoyaltyFunction/pages/claimed_giftcard_page.dart';
 import 'package:spm_shoppingmall_mobile/giftCardAndLoyaltyFunction/pages/notification_page.dart';
-import 'package:spm_shoppingmall_mobile/lockerFunction/pages/moderator/itemsInLocker.dart';
 import 'package:spm_shoppingmall_mobile/lockerFunction/pages/moderator/lockmangment.dart';
 import 'package:spm_shoppingmall_mobile/lockerFunction/pages/user/lockerHome.dart';
 import 'package:spm_shoppingmall_mobile/lockerFunction/pages/moderator/scanLock.dart';
@@ -30,7 +29,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/lockerhome': (context) => const LockerHome(),
         '/scanLock': (context) => const ScanLock(),
-        '/lockerManagment': (context) => const LockerManagment(),
+        '/lockerManagment': (context) => const LockerManagement(),
         '/login' : (context) => const LoginPage(),
         '/signup' : (context) => const SignupPage(),
         '/home' : (context) => HomePage(user: FirebaseAuth.instance.currentUser),

@@ -308,7 +308,7 @@ Widget build(BuildContext context) {
             ],
           ),
         ),
-        Expanded(child: switchPanel(value)),
+        Container(child: Expanded(child: switchPanel(value)),),
       ],
     ),
 
