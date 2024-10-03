@@ -1,21 +1,9 @@
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 
 class DatabaseMethods {
   Future<Stream<QuerySnapshot>> getLockerDetails() async {
     return await FirebaseFirestore.instance.collection("Locker").snapshots();
-  }
-
-  Future<String> getImageUrl(String path) async {
-    try {
-      final Reference storageRef = FirebaseStorage.instance.ref().child(path);
-      final String url = await storageRef.getDownloadURL();
-      return url;
-    } catch (e) {
-      print('Error getting image URL: $e');
-      return ''; // Return an empty string or handle as needed
-    }
   }
 
   Future<Stream<QuerySnapshot>> getEquippedLocker(String userId) async {
@@ -33,6 +21,13 @@ class DatabaseMethods {
         .snapshots();
   }
 
+  Stream<QuerySnapshot> getLockerId(String lockId) {
+    return FirebaseFirestore.instance
+        .collection("Locks")
+        .where("lockid", isEqualTo: lockId)
+        .snapshots();
+  }
+
   Stream<QuerySnapshot> getEmptyLocksStream(String lockerId) {
     return FirebaseFirestore.instance
         .collection("Locks")
@@ -41,12 +36,30 @@ class DatabaseMethods {
         .snapshots();
   }
 
+  Stream<QuerySnapshot> getEquippedLocksStream(String lockerId) {
+    return FirebaseFirestore.instance
+        .collection("Locks")
+        .where("lockerid", isEqualTo: lockerId)
+        .where("isempty", isEqualTo: false)
+        .where("picklockid", isNull: false)
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot> getLockerByLockerIdStream(String lockerId) {
+    return FirebaseFirestore.instance
+        .collection("Locker")
+        .where("lockerid", isEqualTo: lockerId)
+        .snapshots();
+  }
+
+
+
   String _generatePin() {
     final _random = Random();
     return List.generate(6, (index) => _random.nextInt(10)).join();
   }
 
-  Future<void> updateLockDetails(String lockid, String userId, String tranferLockId) async {
+  Future<void> updateLockDetails(String lockid, String userId, String? tranferLockId) async {
     String pin = _generatePin();
 
     try {
@@ -84,6 +97,7 @@ class DatabaseMethods {
         'isread': false,
         'userid': userId,
         'lockid': lockId,
+        'fromlockid': null,
       });
       
       print("Notification created successfully.");
@@ -92,7 +106,7 @@ class DatabaseMethods {
     }
   }
 
-  Future<void> updateTransferLocker(String lockId) async {
+  Future<void> updateTransferLocker(String lockId, String fromlockId) async {
   try {
     // Query the collection to find documents where lockid matches the given value
     QuerySnapshot snapshot = await FirebaseFirestore.instance
@@ -105,7 +119,8 @@ class DatabaseMethods {
     if (snapshot.docs.isNotEmpty) {
       // Update the first matching document (assuming lockid is unique)
       await snapshot.docs.first.reference.update({
-        "isread": true, // Example field to update, you can add more fields here
+        "isread": true,
+        "fromlockid": fromlockId,
       });
       print("Transfer locker updated successfully.");
     } else {

@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:spm_shoppingmall_mobile/auth/firebase_auth_impl/firebase_auth_impl.dart';
 import 'package:spm_shoppingmall_mobile/giftCardAndLoyaltyFunction/util/user_data_service.dart';
@@ -21,7 +22,20 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _fetchUserDetails();
+    _checkUserIdInPreferences();
+  }
+
+  // Check if user ID is set in shared preferences
+  Future<void> _checkUserIdInPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userID = prefs.getString('userID');
+    if (userID == null) {
+      // User ID is not set, redirect to login
+      Navigator.pushReplacementNamed(context, '/login');
+    } else {
+      // If user ID is set, fetch user details
+      _fetchUserDetails();
+    }
   }
 
   Future<void> _fetchUserDetails() async {
@@ -38,9 +52,12 @@ class _HomePageState extends State<HomePage> {
         const SnackBar(content: Text('User signed out')),
       );
 
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.remove('userID');
+
       Navigator.pushReplacementNamed(context, '/login');
     } catch (e) {
-      debugPrint('Sign out failed : $e');
+      debugPrint('Sign out failed: $e');
     }
   }
 

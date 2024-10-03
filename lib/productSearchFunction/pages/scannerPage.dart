@@ -26,6 +26,12 @@ class _ScannerPageState extends State<ScannerPage> {
         ScanMode.BARCODE, // Scan mode for barcode
       );
 
+      if (barcodeResult == "-1") {
+        // Navigate to home if the user cancels the scan
+        Navigator.pushNamed(context, '/home');
+        return;
+      }
+
       if (barcodeResult != "-1") {
         // Move to ProductPage with the scanned barcode
         Navigator.push(
