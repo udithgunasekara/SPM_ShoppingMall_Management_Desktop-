@@ -44,36 +44,35 @@ class _ItemsInLockerState extends State<ItemsInLocker> {
                 var lockerData = snapshot.data!.docs.first;
 
                 return Container(
-  padding: EdgeInsets.all(16.0),
-  width: double.infinity,
-  decoration: BoxDecoration(
-    color: Colors.grey[100],
-    borderRadius: BorderRadius.circular(8.0),
-    border: Border.all(color: Colors.grey[300]!),
-  ),
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.center, // Change to center alignment
-    children: [
-      Text(
-        'Locker ID',
-        style: TextStyle(color: Colors.black54, fontSize: 18.0),
-        textAlign: TextAlign.center, // Center the text
-      ),
-      Text(
-        lockerData['lockerid'], // Display locker ID from Firestore
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0),
-        textAlign: TextAlign.center, // Center the text
-      ),
-      SizedBox(height: 8),
-      Text(
-        lockerData['level'] + ' floor '+ lockerData['location'], // Display locker location dynamically
-        style: TextStyle(fontWeight: FontWeight.w400, fontSize: 20.0),
-        textAlign: TextAlign.center, // Center the text
-      ),
-    ],
-  ),
-);
-
+                  padding: EdgeInsets.all(16.0),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[100],
+                    borderRadius: BorderRadius.circular(8.0),
+                    border: Border.all(color: Colors.grey[300]!),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center, // Change to center alignment
+                    children: [
+                      Text(
+                        'Locker ID',
+                        style: TextStyle(color: Colors.black54, fontSize: 18.0),
+                        textAlign: TextAlign.center, // Center the text
+                      ),
+                      Text(
+                        lockerData['lockerid'], // Display locker ID from Firestore
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0),
+                        textAlign: TextAlign.center, // Center the text
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        lockerData['level'] + ' floor '+ lockerData['location'], // Display locker location dynamically
+                        style: TextStyle(fontWeight: FontWeight.w400, fontSize: 20.0),
+                        textAlign: TextAlign.center, // Center the text
+                      ),
+                    ],
+                  ),
+                );
               },
             ),
             SizedBox(height: 24),
