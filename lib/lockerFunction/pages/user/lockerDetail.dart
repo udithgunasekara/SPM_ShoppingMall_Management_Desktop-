@@ -212,6 +212,7 @@ void _showConfirmationDialog(BuildContext context, String lockId, String tranfer
               onPressed: () {
                 print("Updating lock ID: $lockId");
                 DatabaseMethods().updateLockDetails(lockId, userID, tranferLockId);
+                DatabaseMethods().updatePickupLockDetails(tranferLockId, lockId);
                 DatabaseMethods().updateTransferLocker(tranferLockId, lockId);
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();

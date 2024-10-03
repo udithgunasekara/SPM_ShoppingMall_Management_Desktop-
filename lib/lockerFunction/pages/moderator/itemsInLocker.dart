@@ -100,14 +100,17 @@ class _ItemsInLockerState extends State<ItemsInLocker> {
                   // Retrieve the items from Firestore snapshot
                   var items = snapshot.data!.docs;
 
+                  
+
                   return ListView.builder(
                     itemCount: items.length,
                     itemBuilder: (context, index) {
                       var item = items[index];
                       return _buildLockerItem(
                         lockid: item['lockid'],
-                        pickupLockid: item['picklockid'],
+                        pickupLockid: item['transferto'],
                         password: item['password'],
+                        userId: item['userid'],
                         color: Colors.blue, // Adjust color as per your logic
                       );
                     },
@@ -123,31 +126,35 @@ class _ItemsInLockerState extends State<ItemsInLocker> {
 
   // Widget to display each locker item
   Widget _buildLockerItem({
-    required String lockid,
-    required String pickupLockid,
-    required String password,
-    required Color color,
-  }) {
-    return Card(
-      margin: EdgeInsets.symmetric(vertical: 8),
-      child: ListTile(
-        leading: Container(
-          width: 5,
-          color: color,
-        ),
-        title: Text(lockid),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Password: $password', style: TextStyle(color: Colors.black54)),
-            Text('Need to be transferred to $pickupLockid'),
-          ],
-        ),
-        trailing: Icon(Icons.arrow_drop_down),
-        onTap: () {
-          // Handle tap on item
-        },
+  required String lockid,
+  required String pickupLockid,
+  required String password,
+  required String userId,
+  required Color color,
+}) {
+  return Card(
+    margin: EdgeInsets.symmetric(vertical: 8),
+    child: ListTile(
+      leading: Container(
+        width: 5,
+        color: color,
       ),
-    );
-  }
+      title: Text(lockid),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Password: $password', style: TextStyle(color: Colors.black54)),
+          Text('Need to be transferred to $pickupLockid'),
+        ],
+      ),
+      trailing: TextButton(
+        onPressed: () {
+          DatabaseMethods().updatestatusOfTransferLocker(lockid, pickupLockid, userId);
+        },
+        child: Text('Done'),
+      ),
+    ),
+  );
+}
+
 }
