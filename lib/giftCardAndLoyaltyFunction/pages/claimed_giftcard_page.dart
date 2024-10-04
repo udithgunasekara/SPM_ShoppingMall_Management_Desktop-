@@ -27,8 +27,8 @@ class _ClaimedGiftCardsPageState extends State<ClaimedGiftCardsPage> {
 
     // List to store detailed gift card information
     List<Map<String, dynamic>> detailedGiftCards = [];
-
     for (var doc in giftCardsSnapshot.docs) {
+      String uniqueid = doc.id;
       String giftCardId = doc['giftCardId'];
       DateTime claimedDate = doc['claimedDate'].toDate();
 
@@ -42,7 +42,7 @@ class _ClaimedGiftCardsPageState extends State<ClaimedGiftCardsPage> {
         // Add the gift card details along with claimed date
         Map<String, dynamic> giftCardData = giftCardDoc.data() as Map<String, dynamic>;
         giftCardData['claimedDate'] = claimedDate; // Add claimed date from user's collection
-        giftCardData['id'] = giftCardId; // Add claimed date from user's collection
+        giftCardData['uniqueid'] = uniqueid; // Add claimed date from user's collection
         detailedGiftCards.add(giftCardData);
       }
     }

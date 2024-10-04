@@ -60,12 +60,15 @@ class GiftcardService {
       return;
     }
 
+    //generate unique id for the claimed gift card
+    String uniqueGiftcardId = _firestore.collection('users').doc(userId).collection('giftcards').doc().id;
+
     // Add the gift card to the user's claimed giftcards collection
     await _firestore
         .collection('users')
         .doc(userId)
         .collection('giftcards')
-        .doc(giftCardId)
+        .doc(uniqueGiftcardId)
         .set({
       'giftCardId': giftCardId,
       'claimedDate': Timestamp.now(),

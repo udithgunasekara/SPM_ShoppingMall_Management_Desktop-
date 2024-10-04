@@ -83,7 +83,7 @@ class GiftCardWidget extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Gift Card No : ${giftCard['id']}',
+                        'Gift Card No : ${giftCard['uniqueid']}',
                         style: const TextStyle(
                           fontSize: 14,
                           color: Colors.black,
