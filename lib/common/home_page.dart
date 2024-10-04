@@ -103,18 +103,13 @@ class _HomePageState extends State<HomePage> {
                   const SizedBox(
                     height: 20,
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/billentry');
-                    },
-                    child: const Text('Add loyalty points'),
-                  ),
+                  
                   const SizedBox(
                     height: 20,
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, '/giftcards');
+                      Navigator.pushNamed(context, '/giftcardandloyalty');
                     },
                     child: const Text('your giftcards'),
                   ),
