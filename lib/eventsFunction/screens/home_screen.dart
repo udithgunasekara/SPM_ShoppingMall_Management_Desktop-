@@ -8,9 +8,67 @@ import '../widgets/section_title.dart';
 import 'event_details_screen.dart';
 import 'events_screen.dart';
 import 'promotion_screen.dart'; // Import PromotionScreen
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '/auth/firebase_auth_impl/firebase_auth_impl.dart';
+import '/giftCardAndLoyaltyFunction/util/user_data_service.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  Map<String, dynamic>? _userDetails;
+  final UserDataService _userDataService = UserDataService();
+  final AuthService _auth = AuthService();
+
+  @override
+  void initState() {
+    super.initState();
+    _checkUserIdInPreferences();
+  }
+
+  // Check if user ID is set in shared preferences
+  Future<void> _checkUserIdInPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userID = prefs.getString('userID');
+    if (userID == null) {
+      // User ID is not set, redirect to login
+      Navigator.pushReplacementNamed(context, '/login');
+    } else {
+      // If user ID is set, fetch user details
+      _fetchUserDetails();
+    }
+  }
+
+  Future<void> _fetchUserDetails() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final userDetails = await _userDataService.getUserDetails(user.uid);
+      setState(() {
+        _userDetails = userDetails;
+      });
+    }
+  }
+
+  Future<void> _signOut(BuildContext context) async {
+    try {
+      await _auth.signOut();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('User signed out')),
+      );
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.remove('userID');
+
+      Navigator.pushReplacementNamed(context, '/login');
+    } catch (e) {
+      debugPrint('Sign out failed: $e');
+    }
+  }
 
   void _handleCategorySelected(BuildContext context, String category) {
     if (category == 'Events') {
@@ -21,12 +79,9 @@ class HomeScreen extends StatelessWidget {
     } else if (category == 'Promotions') {
       Navigator.push(
         context,
-        MaterialPageRoute(
-            builder: (context) =>
-                PromotionScreen()), // Navigate to PromotionScreen
+        MaterialPageRoute(builder: (context) => PromotionScreen()),
       );
     } else {
-      // Handle other categories or show a message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('$category category selected')),
       );
@@ -42,34 +97,27 @@ class HomeScreen extends StatelessWidget {
             floating: true,
             title: Text('Mall of America'),
             actions: [
-              // Notification Bell Button
               IconButton(
                 icon: Icon(Icons.notifications),
                 onPressed: () {
                   // Implement notification functionality
                 },
               ),
-              // Logout Button
               IconButton(
                 icon: Icon(Icons.logout),
-                onPressed: () {
-                  // Implement logout functionality
-                },
+                onPressed: () => _signOut(context),
               ),
             ],
           ),
-          // Adjusted padding to reduce margin
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.all(
-                  12.0), // Reduced padding from 16.0 to 12.0
+              padding: const EdgeInsets.all(12.0),
               child: PromotionSlideshow(),
             ),
           ),
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 12.0), // Reduced horizontal padding
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
               child: CategorySlider(
                 onCategorySelected: (category) =>
                     _handleCategorySelected(context, category),
@@ -102,8 +150,7 @@ class HomeScreen extends StatelessWidget {
 
                   return ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    padding: EdgeInsets.symmetric(
-                        horizontal: 12), // Reduced horizontal padding
+                    padding: EdgeInsets.symmetric(horizontal: 12),
                     itemCount: events.length,
                     itemBuilder: (context, index) {
                       return FeaturedEventCard(
