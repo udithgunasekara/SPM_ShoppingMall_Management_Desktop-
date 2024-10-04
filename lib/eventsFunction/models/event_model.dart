@@ -8,6 +8,9 @@ class Event {
   final String location;
   final String bannerImage;
   final String altText;
+  final String description;
+  final String category;
+  bool isReminded;
 
   Event({
     required this.id,
@@ -17,6 +20,9 @@ class Event {
     required this.location,
     required this.bannerImage,
     required this.altText,
+    required this.description,
+    required this.category,
+    this.isReminded = false,
   });
 
   factory Event.fromFirestore(DocumentSnapshot doc) {
@@ -29,6 +35,23 @@ class Event {
       location: data['location'] ?? '',
       bannerImage: data['bannerImage'] ?? '',
       altText: data['altText'] ?? '',
+      description: data['description'] ?? '',
+      category: data['category'] ?? 'All',
+      isReminded: data['isReminded'] ?? false,
     );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'date': date,
+      'time': time,
+      'location': location,
+      'bannerImage': bannerImage,
+      'altText': altText,
+      'description': description,
+      'category': category,
+      'isReminded': isReminded,
+    };
   }
 }

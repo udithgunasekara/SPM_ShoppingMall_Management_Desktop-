@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/event_model.dart';
-import '../widgets/event_list_item.dart';
-import '../widgets/category_chips.dart';
+import '../models/promotion_model.dart';
+import '../widgets/promotion_list_item.dart';
 import '../widgets/custom_search_bar_2.dart';
 
-class EventsScreen extends StatefulWidget {
-  const EventsScreen({Key? key}) : super(key: key);
+class PromotionScreen extends StatefulWidget {
+  const PromotionScreen({Key? key}) : super(key: key);
 
   @override
-  _EventsScreenState createState() => _EventsScreenState();
+  _PromotionScreenState createState() => _PromotionScreenState();
 }
 
-class _EventsScreenState extends State<EventsScreen> {
-  String _selectedCategory = 'All';
+class _PromotionScreenState extends State<PromotionScreen> {
   String _searchQuery = '';
 
   @override
@@ -26,22 +24,21 @@ class _EventsScreenState extends State<EventsScreen> {
               padding: const EdgeInsets.all(16.0),
               child: Row(
                 children: [
-                  // Add Back button to go to Home
+                  // Add Back button to go to previous screen
                   IconButton(
                     icon: const Icon(Icons.arrow_back),
                     onPressed: () {
-                      Navigator.of(context).pop(); // Navigate back to Home
+                      Navigator.of(context).pop(); // Navigate back
                     },
                   ),
                   Expanded(
                     child: Text(
-                      'Events',
+                      'Promotions',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
                     ),
                   ),
-                  // Remove the filter icon here
                 ],
               ),
             ),
@@ -52,17 +49,11 @@ class _EventsScreenState extends State<EventsScreen> {
                 });
               },
             ),
-            CategoryChips(
-              onCategorySelected: (category) {
-                setState(() {
-                  _selectedCategory = category;
-                });
-              },
-            ),
             Expanded(
               child: StreamBuilder<QuerySnapshot>(
-                stream:
-                    FirebaseFirestore.instance.collection('events').snapshots(),
+                stream: FirebaseFirestore.instance
+                    .collection('promotions')
+                    .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     return Center(child: Text('Error: ${snapshot.error}'));
@@ -72,25 +63,22 @@ class _EventsScreenState extends State<EventsScreen> {
                     return const Center(child: CircularProgressIndicator());
                   }
 
-                  List<Event> events = snapshot.data!.docs
-                      .map((doc) => Event.fromFirestore(doc))
-                      .where((event) =>
-                          (_selectedCategory == 'All' ||
-                              event.category == _selectedCategory) &&
-                          event.name
-                              .toLowerCase()
-                              .contains(_searchQuery.toLowerCase()))
+                  List<Promotion> promotions = snapshot.data!.docs
+                      .map((doc) => Promotion.fromFirestore(doc))
+                      .where((promotion) => promotion.name
+                          .toLowerCase()
+                          .contains(_searchQuery.toLowerCase()))
                       .toList();
 
-                  if (events.isEmpty) {
-                    return const Center(child: Text('No events found'));
+                  if (promotions.isEmpty) {
+                    return const Center(child: Text('No promotions found'));
                   }
 
                   return ListView.builder(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    itemCount: events.length,
+                    itemCount: promotions.length,
                     itemBuilder: (context, index) =>
-                        EventListItem(event: events[index]),
+                        PromotionListItem(promotion: promotions[index]),
                   );
                 },
               ),
