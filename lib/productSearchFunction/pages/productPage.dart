@@ -41,8 +41,8 @@ class _ProductPageState extends State<ProductPage> {
         if (productData!['sizes'].isNotEmpty) {
           selectedSize = productData!['sizes'][0];
         }
-        if (productData!['color'].isNotEmpty) {
-          selectedColor = productData!['color'][0];
+        if (productData!['colors'].isNotEmpty) {
+          selectedColor = productData!['colors'][0];
         }
       });
     } catch (e) {}
@@ -66,9 +66,9 @@ class _ProductPageState extends State<ProductPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF5F5F5),
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.purple,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
@@ -78,12 +78,12 @@ class _ProductPageState extends State<ProductPage> {
             ),
           ),
         ),
-        title: const Center(
-          child: Text(
-            'Product Details',
-            style: TextStyle(
-                color: Colors.black, fontSize: 24, fontWeight: FontWeight.w400),
-          ),
+        title: Text(
+          'Product Details',
+          style: TextStyle(
+              color: const Color.fromARGB(255, 255, 255, 255),
+              fontSize: 24,
+              fontWeight: FontWeight.w400),
         ),
       ),
       body: isLoading
@@ -96,19 +96,32 @@ class _ProductPageState extends State<ProductPage> {
                     children: [
                       // Image Carousel
                       FlutterCarousel(
+                        // options: CarouselOptions(
+                        //   height: 500.0,
+                        //   showIndicator: true,
+                        //   slideIndicator: const CircularSlideIndicator(
+                        //     slideIndicatorOptions: SlideIndicatorOptions(
+                        //       itemSpacing: 10,
+                        //       indicatorRadius: 5,
+                        //       currentIndicatorColor:
+                        //           Color.fromARGB(255, 255, 255, 255),
+                        //       indicatorBackgroundColor:
+                        //           Color.fromARGB(255, 102, 0, 150),
+                        //     ),
+                        //   ),
+                        // ),
+
                         options: CarouselOptions(
-                          height: 500.0,
-                          showIndicator: true,
-                          slideIndicator: const CircularSlideIndicator(
-                            slideIndicatorOptions: SlideIndicatorOptions(
-                              itemSpacing: 10,
-                              indicatorRadius: 5,
-                              currentIndicatorColor:
-                                  Color.fromARGB(255, 255, 255, 255),
-                              indicatorBackgroundColor:
-                                  Color.fromARGB(255, 102, 0, 150),
-                            ),
-                          ),
+                          height: 400.0,
+                          viewportFraction: 1.0,
+                          enlargeCenterPage: false,
+                          autoPlay: true,
+                          autoPlayInterval: Duration(seconds: 3),
+                          autoPlayAnimationDuration:
+                              Duration(milliseconds: 800),
+                          autoPlayCurve: Curves.fastOutSlowIn,
+                          pauseAutoPlayOnTouch: true,
+                          aspectRatio: 2.0,
                         ),
                         items: (productData!['images'] as List<dynamic>)
                             .map((imageUrl) {
@@ -116,52 +129,78 @@ class _ProductPageState extends State<ProductPage> {
                             builder: (BuildContext context) {
                               return Image.network(
                                 imageUrl,
-                                fit: BoxFit.contain,
+                                fit: BoxFit.fitWidth,
                               );
                             },
                           );
                         }).toList(),
                       ),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 10),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
+                                // Category Text
                                 Text(
-                                  productData!['category'],
+                                  productData!['category'].toUpperCase(),
                                   style: const TextStyle(
-                                      fontSize: 16, color: Colors.grey),
+                                    fontSize: 14,
+                                    color: Colors.grey,
+                                    letterSpacing:
+                                        1.2, // Slight letter spacing for better readability
+                                  ),
                                 ),
-                                Row(
-                                  children: [
-                                    Text(productData!['brand'],
-                                        style: const TextStyle(fontSize: 18)),
-                                  ],
+                                // Brand Text
+                                Text(
+                                  productData!['brand'],
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 1),
+                            const SizedBox(height: 8),
+                            // Product Title
                             Text(
                               productData!['title'],
                               style: const TextStyle(
-                                  fontSize: 24, fontWeight: FontWeight.bold),
+                                fontSize: 28, // Slightly larger for emphasis
+                                fontWeight: FontWeight.bold,
+                                color: Colors
+                                    .black87, // Darker for better contrast
+                              ),
                             ),
-                            const SizedBox(height: 4),
+                            const SizedBox(
+                                height: 12), // Add more space for clarity
+                            // Section Header for "Product Details"
                             const Text(
                               'Product Details',
                               style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.w400),
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
+                                color: Colors
+                                    .black54, // Subtle color for section header
+                              ),
                             ),
-                            const SizedBox(height: 4),
+                            const SizedBox(height: 6),
+                            // Product Description
                             Text(
                               productData!['description'],
                               style: const TextStyle(
-                                  fontSize: 14,
-                                  color: Color.fromARGB(255, 122, 122, 122)),
+                                fontSize: 16,
+                                color: Color(
+                                    0xFF7A7A7A), // Adjust the color to be softer
+                                height:
+                                    1.5, // Increased line height for readability
+                              ),
                             ),
+                            const SizedBox(height: 4),
+
                             const SizedBox(height: 8),
                             const Divider(
                                 color: const Color.fromARGB(255, 82, 82, 82)),
@@ -171,7 +210,9 @@ class _ProductPageState extends State<ProductPage> {
                               style: TextStyle(
                                   fontSize: 18, fontWeight: FontWeight.w500),
                             ),
+
                             const SizedBox(height: 4),
+
                             Container(
                               width: double
                                   .infinity, // Ensures the Wrap takes the full width
@@ -184,7 +225,9 @@ class _ProductPageState extends State<ProductPage> {
                                     .toList(),
                               ),
                             ),
+
                             const SizedBox(height: 16),
+
                             const Text(
                               'Available Colors',
                               style: TextStyle(
@@ -193,9 +236,9 @@ class _ProductPageState extends State<ProductPage> {
                             const SizedBox(height: 4),
                             Wrap(
                               spacing: 20,
-                              children: productData!['color']
+                              children: productData!['colors']
                                   .map<Widget>(
-                                      (color) => _buildColorCircle(color))
+                                      (colors) => _buildColorCircle(colors))
                                   .toList(),
                             ),
                             const SizedBox(height: 15),
@@ -223,7 +266,7 @@ class _ProductPageState extends State<ProductPage> {
                                       style: const TextStyle(
                                         fontSize: 24,
                                         fontWeight: FontWeight.bold,
-                                        color: Color.fromARGB(255, 152, 11, 0),
+                                        color: Color.fromARGB(255, 192, 13, 0),
                                       ),
                                     ),
                                   ],
@@ -240,7 +283,7 @@ class _ProductPageState extends State<ProductPage> {
                                   ),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor:
-                                        Colors.brown, // Button color
+                                        Colors.purple, // Button color
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 15, horizontal: 18),
                                     shape: RoundedRectangleBorder(
@@ -262,10 +305,9 @@ class _ProductPageState extends State<ProductPage> {
   }
 
   Widget _buildSizeButton(String size) {
-    bool isSelected = selectedSize == size;
     return GestureDetector(
       child: Card(
-        color: Colors.brown,
+        color: Colors.purple[400],
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),

@@ -26,15 +26,12 @@ class _WishlistState extends State<Wishlist> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
-          child: Text(
+          title: Text(
             'Wishlist',
             style: TextStyle(
                 color: Colors.black, fontSize: 24, fontWeight: FontWeight.w400),
           ),
-        ),
-        backgroundColor: Colors.brown[600],
-      ),
+          backgroundColor: Colors.purple),
       body: FutureBuilder<List<DocumentSnapshot>>(
         future: fetchWishlistProducts(),
         builder: (context, snapshot) {
@@ -85,6 +82,16 @@ class _WishlistState extends State<Wishlist> {
                                     fontSize: 20,
                                   ),
                                 ),
+
+                                //add stocks
+                                Text(
+                                  "Remaining Stock: ${product['stocks']}",
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400,
+                                    color: Color.fromARGB(255, 39, 39, 39),
+                                  ),
+                                ),
                                 const SizedBox(height: 5),
                                 Text(
                                   "Price: \$${product['price']}",
@@ -94,13 +101,15 @@ class _WishlistState extends State<Wishlist> {
                                     color: Colors.green,
                                   ),
                                 ),
-                                const SizedBox(height: 10),
+                                const SizedBox(height: 5),
+
                                 Align(
                                   alignment: Alignment.centerRight,
                                   child: IconButton(
                                     icon:
                                         const Icon(Icons.remove_shopping_cart),
-                                    color: const Color.fromARGB(255, 132, 2, 0),
+                                    color:
+                                        const Color.fromARGB(255, 192, 13, 0),
                                     onPressed: () {
                                       removeProductFromWishlist(product.id);
                                     },
