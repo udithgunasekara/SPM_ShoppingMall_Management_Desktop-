@@ -79,68 +79,83 @@ class _GiftCardAndLoyaltyPageState extends State<GiftCardAndLoyaltyPage> {
         backgroundColor: const Color.fromARGB(255, 91, 0, 119),
         shadowColor: Colors.black,
         iconTheme: const IconThemeData(
-          color: Colors.black,
+          color: Color.fromARGB(255, 255, 255, 255),
           weight: 60,
         ),
         title: Center(
           child: Container(
-            padding: EdgeInsets.all(0.0),
-            child: ToggleButtons(
-              borderRadius: BorderRadius.circular(30.0),
-              fillColor: const Color.fromARGB(255, 0, 0, 0),
-              selectedColor: const Color.fromARGB(255, 255, 255, 255),
-              color: const Color.fromARGB(255, 0, 0, 0),
-              borderColor: const Color.fromARGB(0, 0, 0, 0),
-              selectedBorderColor: Colors.transparent,
-              isSelected: isSelected,
-              onPressed: (int index) {
-                setState(() {
-                  for (int i = 0; i < isSelected.length; i++) {
-                    isSelected[i] = i == index;
-                    _selectedIndex = index;
-                  }
-                });
-              },
-              children: [
-                Container(
-                  constraints: const BoxConstraints(minWidth: 150), // Set a minimum width for both buttons
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 15),
-                  decoration: BoxDecoration(
-                    color: isSelected[0]
-                        ? const Color.fromARGB(255, 0, 0, 0)
-                        : const Color.fromARGB(255, 248, 248, 248),
-                  ),
-                  child: Text(
-                    'Gift Cards',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight:
-                          isSelected[0] ? FontWeight.bold : FontWeight.normal,
+              padding: EdgeInsets.all(0.0),
+              child: ToggleButtons(
+                borderRadius: BorderRadius.circular(30.0),
+                fillColor: Colors.transparent,
+                selectedColor: const Color.fromARGB(255, 255, 255, 255),
+                color: const Color.fromARGB(255, 0, 0, 0),
+                borderColor: const Color.fromARGB(0, 0, 0, 0),
+                selectedBorderColor: Colors.transparent,
+                isSelected: isSelected,
+                onPressed: (int index) {
+                  setState(() {
+                    for (int i = 0; i < isSelected.length; i++) {
+                      isSelected[i] = i == index;
+                      _selectedIndex = index;
+                    }
+                  });
+                },
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 4.0, vertical: 5),
+                    child: Container(
+                      constraints: const BoxConstraints(minWidth: 150),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 4.0, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: isSelected[0]
+                            ? const Color.fromARGB(255, 0, 0, 0)
+                            : const Color.fromARGB(87, 255, 255, 255),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        'Gift Cards',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: isSelected[0]
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                          color: isSelected[0] ? Colors.white : Colors.black,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
-                    textAlign: TextAlign.center, // Ensure text is centered
                   ),
-                ),
-                Container(
-                  constraints: const BoxConstraints(minWidth: 150), // Set the same minimum width
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 15),
-                  decoration: BoxDecoration(
-                    color: isSelected[1]
-                        ? const Color.fromARGB(255, 0, 0, 0)
-                        : const Color.fromARGB(255, 248, 248, 248),
-                  ),
-                  child: Text(
-                    'Loyalty Points',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight:
-                          isSelected[1] ? FontWeight.bold : FontWeight.normal,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 4.0, vertical: 5),
+                    child: Container(
+                      constraints: const BoxConstraints(minWidth: 150),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 4.0, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: isSelected[1]
+                            ? const Color.fromARGB(255, 0, 0, 0)
+                            : const Color.fromARGB(87, 255, 255, 255),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        'Loyalty Points',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: isSelected[1]
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                          color: isSelected[1] ? Colors.white : Colors.black,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
-                    textAlign: TextAlign.center, // Ensure text is centered
                   ),
-                ),
-              ],
-            ),
-          ),
+                ],
+              )),
         ),
       ),
       body:
@@ -215,7 +230,7 @@ class _GiftCardAndLoyaltyPageState extends State<GiftCardAndLoyaltyPage> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 40, vertical: 30),
                   decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 129, 68, 170),
+                    color: const Color.fromARGB(255, 219, 159, 29),
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: const [
                       BoxShadow(
