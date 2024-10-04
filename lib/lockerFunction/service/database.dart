@@ -147,7 +147,7 @@ class DatabaseMethods {
     }
   }
 
-  Future<void> createNotification(String userId, String lockId) async {
+  Future<void> createTransferLocker(String userId, String lockId) async {
     try {
       // Create a new document in the "Notification" collection
       await FirebaseFirestore.instance.collection("TransferLocker").doc().set({
@@ -229,5 +229,52 @@ Future<void> updatestatusOfTransferLocker(String lockId, String tolockId, String
         .where("inprogress", isEqualTo: true)
         .snapshots();
   }
+
+  Future<void> createNotification(String userId, String message, ) async {
+    try {
+      // Create a new document in the "Notification" collection
+      await FirebaseFirestore.instance.collection("Notification").doc().set({
+        'isread': false,
+        'receiver': userId,
+        'message': message,
+      });
+      
+      print("Notification created successfully.");
+    } catch (e) {
+      print("Error creating notification: $e");
+    }
+  }
+
+  Stream<QuerySnapshot> getaNotification(String userId) {
+    return FirebaseFirestore.instance
+        .collection("Notification")
+        .where('receiver', isEqualTo: userId)
+        .snapshots();
+  }
+
+  Future<void> makeNotificationRead(String userID) async {
+  try {
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection("Notification")
+        .where("isread", isEqualTo: false)
+        .where("receiver", isEqualTo: userID)
+        .get();
+
+    // Check if any documents were found
+    if (snapshot.docs.isNotEmpty) {
+      // Iterate through all matching documents and update each one
+      for (var doc in snapshot.docs) {
+        await doc.reference.update({
+          "isread": true,
+        });
+      }
+      print("All notifications updated successfully.");
+    } else {
+      print("No notifications found with the provided userID: $userID");
+    }
+  } catch (e) {
+    print("Error updating notifications: $e");
+  }
+}
 
 }
