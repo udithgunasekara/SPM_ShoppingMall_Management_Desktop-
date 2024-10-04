@@ -30,6 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Map<String, dynamic>? _userDetails;
   final UserDataService _userDataService = UserDataService();
   final AuthService _auth = AuthService();
+  String? _role;
 
   @override
   void initState() {
@@ -41,6 +42,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _checkUserIdInPreferences() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userID = prefs.getString('userID');
+    _role = prefs.getString('role');
+    print(_role);
     if (userID == null) {
       // User ID is not set, redirect to login
       Navigator.pushReplacementNamed(context, '/login');
@@ -67,6 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.remove('userID');
+      await prefs.remove('role');
 
       Navigator.pushReplacementNamed(context, '/login');
     } catch (e) {
@@ -87,10 +91,14 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     }
     else if (category == 'Locker') {
-      Navigator.push(
+      if (_role == 'moderator'){
+        Navigator.pushReplacementNamed(context, '/lockerManagment');
+      }else{
+        Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => LockerHome()),
       );
+      }
     }else if (category == 'Giftcards') {
       Navigator.push(
         context,

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -41,7 +42,14 @@ class _LoginPageState extends State<LoginPage> {
       //get current user and pass it to the home page
       User? user = FirebaseAuth.instance.currentUser;
 
-      _setUserIDInPreferences(user!.uid);
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+            .collection('users') // Adjust the collection path if needed
+            .doc(user!.uid)
+            .get();
+
+      String role = userDoc.get('role');
+
+      _setUserIDInPreferences(user.uid, role);
 
       Navigator.pushReplacement(context,
           MaterialPageRoute(builder: (context) => MyHomePage()));
@@ -50,9 +58,10 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  Future<void> _setUserIDInPreferences(String userID) async {
+  Future<void> _setUserIDInPreferences(String userID, String role) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('userID', userID);
+    await prefs.setString('role', role);
   }
 
   @override

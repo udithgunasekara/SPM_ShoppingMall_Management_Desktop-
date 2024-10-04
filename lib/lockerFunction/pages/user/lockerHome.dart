@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:spm_shoppingmall_mobile/eventsFunction/widgets/navbar.dart';
 import 'package:spm_shoppingmall_mobile/lockerFunction/service/database.dart';
 import 'package:spm_shoppingmall_mobile/lockerFunction/pages/user/lockerDetail.dart';
 import 'package:spm_shoppingmall_mobile/lockerFunction/pages/user/Locks.dart';
@@ -387,25 +388,14 @@ class _LockerHomeState extends State<LockerHome> {
       ),
 
       // Add Bottom Navigation Bar
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_filled),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_bag),
-            label: 'Shopping',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_box),
-            label: 'Profile',
-          ),
-        ],
+      bottomNavigationBar: Navbar(
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blueAccent,
-        onTap: _onItemTapped,
-      ),
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
+     ),
     );
   }
 }

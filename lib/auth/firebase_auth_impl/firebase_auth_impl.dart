@@ -43,6 +43,7 @@ class AuthService{
           'phone': phone,
           'email': email,
           'loyaltyPoints': 0,
+          'role': 'user',
         });
       }
       return null; //no errors
