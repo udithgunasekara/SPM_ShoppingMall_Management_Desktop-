@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:spm_shoppingmall_mobile/giftCardAndLoyaltyFunction/pages/loyalty_giftcard_page.dart';
+import 'package:spm_shoppingmall_mobile/lockerFunction/pages/user/lockerHome.dart';
 import '../models/event_model.dart';
 import '../widgets/category_slider.dart';
 import '../widgets/featured_event_card.dart';
@@ -14,13 +16,17 @@ import '/auth/firebase_auth_impl/firebase_auth_impl.dart';
 import '/giftCardAndLoyaltyFunction/util/user_data_service.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+
+  final User? user;
+
+  const HomeScreen({super.key,required this.user});
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
   Map<String, dynamic>? _userDetails;
   final UserDataService _userDataService = UserDataService();
   final AuthService _auth = AuthService();
@@ -44,14 +50,12 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> _fetchUserDetails() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      final userDetails = await _userDataService.getUserDetails(user.uid);
+  Future<void> _fetchUserDetails() async {    
+      final userDetails = await _userDataService.getUserDetails(widget.user!.uid);
       setState(() {
         _userDetails = userDetails;
       });
-    }
+    
   }
 
   Future<void> _signOut(BuildContext context) async {
@@ -81,7 +85,19 @@ class _HomeScreenState extends State<HomeScreen> {
         context,
         MaterialPageRoute(builder: (context) => PromotionScreen()),
       );
-    } else {
+    }
+    else if (category == 'Locker') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => LockerHome()),
+      );
+    }else if (category == 'Giftcards') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => GiftCardAndLoyaltyPage()),
+      );
+    }
+     else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('$category category selected')),
       );
@@ -95,12 +111,19 @@ class _HomeScreenState extends State<HomeScreen> {
         slivers: [
           SliverAppBar(
             floating: true,
-            title: Text('Mall of America'),
+            title: Text('PocketMall',
+              style: TextStyle(
+                color: Colors.purple,
+                fontSize: 28,
+                fontWeight: FontWeight.w900,
+              )
+            ),
+            
             actions: [
               IconButton(
-                icon: Icon(Icons.notifications),
+                icon: Icon(Icons.notifications_active_outlined),
                 onPressed: () {
-                  // Implement notification functionality
+                  Navigator.pushNamed(context, '/notifications');
                 },
               ),
               IconButton(

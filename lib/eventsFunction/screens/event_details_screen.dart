@@ -62,9 +62,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
           .update({'isReminded': newIsReminded});
 
       if (newIsReminded) {
-        await ReminderService.scheduleReminder(widget.event);
+        // await ReminderService.scheduleReminder(widget.event);
       } else {
-        await ReminderService.cancelReminder(widget.event.id);
+        // await ReminderService.cancelReminder(widget.event.id);
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
