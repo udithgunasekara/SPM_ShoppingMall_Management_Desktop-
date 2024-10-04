@@ -1,7 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:spm_shoppingmall_mobile/common/home_page.dart';
-import 'package:spm_shoppingmall_mobile/giftCardAndLoyaltyFunction/pages/loyalty_giftcard_page.dart';
 import 'package:spm_shoppingmall_mobile/giftCardAndLoyaltyFunction/util/user_data_service.dart';
 
 class BillEntryPage extends StatefulWidget {
