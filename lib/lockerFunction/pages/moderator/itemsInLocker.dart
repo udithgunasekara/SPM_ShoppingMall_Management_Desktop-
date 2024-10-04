@@ -150,6 +150,7 @@ class _ItemsInLockerState extends State<ItemsInLocker> {
       trailing: TextButton(
         onPressed: () {
           DatabaseMethods().updatestatusOfTransferLocker(lockid, pickupLockid, userId);
+          DatabaseMethods().createNotification(userId, 'Your goods in lock $lockid is in progress tranferring to pickup lock $pickupLockid');
         },
         child: Text('Done'),
       ),
