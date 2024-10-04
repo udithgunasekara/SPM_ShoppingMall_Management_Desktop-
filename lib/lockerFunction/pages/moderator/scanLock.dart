@@ -250,7 +250,7 @@ void reserveLock(String barcode) {
 
       // Now update the lock details with the lockId and barcode
       DatabaseMethods().updateLockDetails(lockId, barcode, null);
-      DatabaseMethods().createNotification(barcode, lockId);
+      DatabaseMethods().createTransferLocker(barcode, lockId);
     } else {
       // Handle case when no empty locks are available
       print("No empty locks available for lockerId");
