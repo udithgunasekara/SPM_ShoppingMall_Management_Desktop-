@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spm_shoppingmall_mobile/auth/firebase_auth_impl/firebase_auth_impl.dart';
 import 'package:spm_shoppingmall_mobile/common/home_page.dart';
 import 'package:spm_shoppingmall_mobile/eventsFunction/screens/home_screen.dart';
+import 'package:spm_shoppingmall_mobile/main.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -43,7 +44,7 @@ class _LoginPageState extends State<LoginPage> {
       _setUserIDInPreferences(user!.uid);
 
       Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => HomeScreen(user: user)));
+          MaterialPageRoute(builder: (context) => MyHomePage()));
     } else {
       debugPrint('Login failed');
     }
