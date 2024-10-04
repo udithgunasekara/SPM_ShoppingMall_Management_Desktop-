@@ -42,12 +42,69 @@ class _LockerManagementState extends State<LockerManagement> {
     }
   }
 
+  Widget changeSubHead() {
+    String message;
+
+    if (value == 1) {
+      message = "This screen showed available lockers and count of packages that need to be tranfer to the pick up locker";
+    } else{
+      message = "This screen showed pickup locker details and tranfer details of specific packages that are transfer in progress";
+    }
+
+    return Container(
+      width: 300.0,
+      height: 180.0, // Set a specific width less than the parent width
+      padding: EdgeInsets.symmetric(vertical: 16.0),
+      child: Column(
+        children: [
+           if (value == 0) ...[ // Adjust the size of the circle
+              Icon(
+                Icons.cached_outlined, // QR code icon
+                color: Colors.white, // Icon color
+                size: 40.0, // Icon size
+              ),
+            SizedBox(height: 8.0), // Add space between the icon and the text
+          ],
+          if (value == 1) ...[ // Adjust the size of the circle
+              Icon(
+                Icons.assistant, // QR code icon
+                color: Colors.white, // Icon color
+                size: 40.0, // Icon size
+              ),
+            SizedBox(height: 8.0), // Add space between the icon and the text
+          ],
+          Text(
+            message,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 18.0, // Font size
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1.0, // Added letter spacing for readability
+              height: 1.4, // Adjusted line height for better spacing between lines
+            ),
+            textAlign: TextAlign.center, // Center the text for better layout
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
 Widget build(BuildContext context) {
   return Scaffold(
     appBar: AppBar(
-      title: Text('Lockers'),
       backgroundColor: Colors.blueAccent,
+      title: Center(
+        child: Text(
+          "Locker Managment",
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 20.0, // Font size
+            fontWeight: FontWeight.bold,
+            letterSpacing: 1.0,
+          ),
+        ),
+      ),
     ),
     body: Column(
       children: [
@@ -69,36 +126,9 @@ Widget build(BuildContext context) {
           ),
           padding: EdgeInsets.all(16.0),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(Colors.orange),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.pushReplacementNamed(context, '/scanLock');
-                },
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.qr_code_scanner),
-                    SizedBox(width: 8.0),
-                    Text(
-                      "Scan QR Code",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.0,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              changeSubHead(),
               SizedBox(height: 16.0), // Spacing between the buttons
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

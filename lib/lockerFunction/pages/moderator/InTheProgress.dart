@@ -4,7 +4,7 @@ import 'package:spm_shoppingmall_mobile/lockerFunction/service/database.dart';
 
 Widget packagesInTheProgress(){
   return StreamBuilder<QuerySnapshot>(
-                stream: DatabaseMethods().getEquippedLocksStream('P054'),
+                stream: DatabaseMethods().getallTransferLocker(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(child: CircularProgressIndicator());
@@ -16,6 +16,7 @@ Widget packagesInTheProgress(){
 
                   // Retrieve the items from Firestore snapshot
                   var items = snapshot.data!.docs;
+                  
 
                   return ListView.builder(
                     itemCount: items.length,
@@ -23,8 +24,8 @@ Widget packagesInTheProgress(){
                       var item = items[index];
                       return _buildLockerItem(
                         lockid: item['lockid'],
-                        pickupLockid: item['picklockid'],
-                        password: item['password'],
+                        pickupLockid: item['tolockid'],
+                        password: item['userid'],
                         color: Colors.blue, // Adjust color as per your logic
                       );
                     },
@@ -34,30 +35,32 @@ Widget packagesInTheProgress(){
 }
 
 Widget _buildLockerItem({
-    required String lockid,
-    required String pickupLockid,
-    required String password,
-    required Color color,
-  }) {
-    return Card(
-      margin: EdgeInsets.symmetric(vertical: 8),
-      child: ListTile(
-        leading: Container(
-          width: 5,
-          color: color,
-        ),
-        title: Text(lockid),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Password: $password', style: TextStyle(color: Colors.black54)),
-            Text('Need to be transferred to $pickupLockid'),
-          ],
-        ),
-        trailing: Icon(Icons.arrow_drop_down),
-        onTap: () {
-          // Handle tap on item
-        },
+  required String lockid,
+  required String pickupLockid,
+  required String password,
+  required Color color,
+}) {
+  return Card(
+    margin: EdgeInsets.symmetric(vertical: 8),
+    child: ListTile(
+      leading: Container(
+        width: 5,
+        color: color,
       ),
-    );
-  }
+      title: Text("Transfer To " + pickupLockid),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Password: $password', style: TextStyle(color: Colors.black54)),
+          Text('Transfer In Progress', style: TextStyle(color: Colors.green)),
+        ],
+      ),
+      trailing: TextButton(
+        onPressed: () {
+          DatabaseMethods().releaseTranferLocker(lockid);
+        },
+        child: Text('Done'),
+      ),
+    ),
+  );
+}
