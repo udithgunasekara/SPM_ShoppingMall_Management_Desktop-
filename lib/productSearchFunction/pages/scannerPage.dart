@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:spm_shoppingmall_mobile/common/home_page.dart';
 import 'package:spm_shoppingmall_mobile/productSearchFunction/pages/productPage.dart';
 
 class ScannerPage extends StatefulWidget {
@@ -25,11 +27,16 @@ class _ScannerPageState extends State<ScannerPage> {
         true, // Whether to show a flash icon
         ScanMode.BARCODE, // Scan mode for barcode
       );
+      User? user = FirebaseAuth.instance.currentUser;
 
       if (barcodeResult == "-1") {
-        // Navigate to home if the user cancels the scan
-        Navigator.pushNamed(context, '/home');
-        return;
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) => HomePage(
+                      user: user,
+                    )),
+            (Route<dynamic> route) => false);
       }
 
       if (barcodeResult != "-1") {
@@ -54,7 +61,7 @@ class _ScannerPageState extends State<ScannerPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Barcode Scanner"),
-        backgroundColor: Colors.brown[400],
+        backgroundColor: Colors.purple[400],
       ),
       body: Center(
         child:
