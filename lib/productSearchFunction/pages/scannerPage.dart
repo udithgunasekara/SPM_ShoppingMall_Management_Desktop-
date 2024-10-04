@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:spm_shoppingmall_mobile/common/home_page.dart';
+import 'package:spm_shoppingmall_mobile/main.dart';
 import 'package:spm_shoppingmall_mobile/productSearchFunction/pages/productPage.dart';
 
 class ScannerPage extends StatefulWidget {
@@ -33,9 +34,7 @@ class _ScannerPageState extends State<ScannerPage> {
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-                builder: (context) => HomePage(
-                      user: user,
-                    )),
+                builder: (context) => MyHomePage()),
             (Route<dynamic> route) => false);
       }
 
